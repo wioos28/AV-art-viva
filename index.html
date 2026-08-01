@@ -1,15 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
+    <meta
+      http-equiv="Cross-Origin-Opener-Policy"
+      content="same-origin"
+    />
+    <meta
+      http-equiv="Cross-Origin-Embedder-Policy"
+      content="require-corp"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="AV-ArtViva: AI-powered SVG Studio for web and mobile" />
-    <link rel="apple-touch-icon" href="/icons.svg" />
-    <title>AV-ArtViva AI SVG Studio</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#101116" />
+    <meta name="description" content="AV-ArtViva: AI SVG Studio — Prompt → SVG, editor, layers, export. Offline-first PWA." />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ArtViva" />
+    <title>AV-ArtViva · AI SVG Studio</title>
+    <style>
+      /* Splash: hiển thị ngay trước khi app bundle tải xong (khởi động nhanh) */
+      html,
+      body {
+        margin: 0;
+        background: #101116;
+      }
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+      }
+      #boot .logo {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: #c084fc;
+      }
+      #boot .bar {
+        width: 120px;
+        height: 4px;
+        border-radius: 4px;
+        background: #26272e;
+        overflow: hidden;
+      }
+      #boot .bar i {
+        display: block;
+        width: 40%;
+        height: 100%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #7c5cff, #00d4c8);
+        animation: slide 1s ease-in-out infinite;
+      }
+      @keyframes slide {
+        0% { transform: translateX(-120%); }
+        100% { transform: translateX(320%); }
+      }
+    </style>
   </head>
   <body>
+    <div id="boot">
+      <div class="logo">AV·ArtViva</div>
+      <div class="bar"><i></i></div>
+      <div>Đang khởi động studio…</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

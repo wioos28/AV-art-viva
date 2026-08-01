@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101116" />
+    <title>AV-ArtViva · Đang ngoại tuyến</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #101116;
+        color: #d6d3df;
+        font-family: system-ui, -apple-system, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .wrap {
+        max-width: 420px;
+        padding: 32px 20px;
+      }
+      h1 {
+        font-size: 22px;
+        color: #c084fc;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #9ca3af;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: 0;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #7c5cff, #00d4c8);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      button:active {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Đang ngoại tuyến</h1>
+      <p>
+        Trang này cần kết nối mạng để tải lần đầu. Sau khi tải xong một lần,
+        AV-ArtViva hoạt động hoàn toàn ngoại tuyến.
+      </p>
+      <button onclick="location.reload()">Thử lại</button>
+    </div>
+  </body>
+</html>

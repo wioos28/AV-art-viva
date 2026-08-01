@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# ONNX wasm được copy khi `npm install` (scripts/copy-wasm.mjs) — không commit.
+public/models/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
