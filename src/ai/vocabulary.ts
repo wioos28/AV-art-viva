@@ -52,6 +52,7 @@ export const SUBJECT_VOCAB: Record<string, VocabularyEntry> = {
   cat: { keywords: ['cat', 'mèo', 'kitten', 'mèo con', 'dog', 'cún', 'chó', 'puppy', 'fox', 'cáo'], weight: 1 },
   bird: { keywords: ['bird', 'chim', 'owl', 'cú', 'dove', 'bồ câu', 'swallow', 'nhạn'], weight: 1 },
   fish: { keywords: ['fish', 'cá', 'whale', 'cá voi', 'dolphin', 'cá heo', 'biển sâu'], weight: 1 },
+  beach: { keywords: ['beach', 'bờ biển', 'bãi biển', 'biển', 'sea', 'ocean', 'đại dương', 'coast', 'bờ cát', 'cát', 'sand', 'island', 'đảo', 'sóng', 'wave', 'vịnh'], weight: 1 },
   house: { keywords: ['house', 'ngôi nhà', 'home', 'castle', 'lâu đài', 'building', 'tòa nhà', 'làng quê', 'village'], weight: 1 },
   cloud: { keywords: ['cloud', 'mây', 'sky', 'bầu trời', 'rainbow', 'cầu vồng', 'bầu trời trong'], weight: 0.9 },
   rocket: { keywords: ['rocket', 'tên lửa', 'space', 'vũ trụ', 'astronaut', 'phi hành gia', 'shuttle'], weight: 1 },

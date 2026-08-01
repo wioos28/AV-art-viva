@@ -71,6 +71,33 @@ export default defineConfig({
               expiration: { maxEntries: 16, maxAgeSeconds: 60 * 60 * 24 * 365 },
             },
           },
+          {
+            urlPattern: /\/models\/ort-tjs\/.*\.(wasm|mjs)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'ort-tjs-wasm',
+              expiration: { maxEntries: 24, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
+          // WASM + glue của transformers.js (tải từ jsdelivr) — cache để offline.
+          {
+            urlPattern: /https:\/\/cdn\.jsdelivr\.net\/npm\/onnxruntime-web@[\w.\-]+\/dist\/.*\.(wasm|mjs)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'ort-jsdelivr',
+              expiration: { maxEntries: 16, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
+          // File model transformers.js từ Hugging Face — cache để chạy offline
+          // sau lần tải đầu (IndexedDB cũng lưu sẵn nhưng service worker bổ sung).
+          {
+            urlPattern: /^https:\/\/huggingface\.co\/.*\/(resolve|resolve\/main|blob)\//,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'hf-models',
+              expiration: { maxEntries: 32, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
         ],
       },
     }),
@@ -86,7 +113,7 @@ export default defineConfig({
       output: {
         // manualChunks dạng hàm cho tương thích rolldown-vite.
         manualChunks(id: string) {
-          if (id.includes('onnxruntime-web')) return 'ort';
+          if (id.includes('onnxruntime-web') || id.includes('@huggingface/transformers')) return 'ai-runtime';
           if (id.includes('node_modules/react') || id.includes('node_modules/idb')) return 'vendor';
           return undefined;
         },

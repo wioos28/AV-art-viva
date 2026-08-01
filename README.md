@@ -45,10 +45,21 @@ Lưu ý: các file `.wasm` (13–27MB) **không được commit** (đã `.gitign
 Luồng AI: `Prompt → AiFacade.analyze → PromptAnalysis → buildScene → ArtDocument → SVG`.
 
 1. Chế độ `Auto`/`Rule-based`: dùng provider nội bộ (phân tích từ khoá, màu, bố cục) — chạy ngay không cần model.
-2. Chế độ `ONNX` (Cài đặt → AI): nạp model `.onnx` từ máy, lưu local.
-   - **WebGPU**: nếu trình duyệt hỗ trợ (`navigator.gpu`), ORT chạy qua execution provider `webgpu` (bundle `onnxruntime-web/webgpu`), tự fallback sang `wasm` khi lỗi.
-   - Input kỳ vọng: `float32 [1, D]` (bag-of-words trên từ điển cố định) → output `float32 [1, N]` (nhãn style).
-   - WebGPU yêu cầu context tách biệt nguồn gốc (COOP/COEP) — đã thiết lập cho cả dev (`vite.config.ts`) và prod (`vercel.json`).
+2. Chế độ `AI local` (Cài đặt → AI): nạp model **ONNX** nhỏ qua `transformers.js` chạy **WebGPU → WASM** (tự fallback).
+   - Model mặc định `Qwen2.5-0.5B-Instruct` được **bundle sẵn trong source** (`public/models/`) → chạy offline tuyệt đối.
+   - Model được nạp qua worker riêng (không block UI), có queue/cancel/progress, cache vào IndexedDB sau lần tải đầu.
+   - Nhập model khác bằng **repo ID** (VD `onnx-community/SmolLM2-360M-Instruct`), nguồn tải ModelScope (mặc định) hoặc HuggingFace.
+
+### Bundle model (offline tuyệt đối)
+
+App ưu tiên đọc model đã bundle trong `public/models/` (host `local`, không gọi mạng):
+
+```bash
+node scripts/download-models.mjs                     # tải Qwen2.5-0.5B-Instruct về public/models
+node scripts/download-models.mjs onnx-community/Phi-3.5-mini-instruct
+```
+
+Các file model không commit vào git (giới hạn 100MB của GitHub) — chạy script sau khi clone.
 
 ## Cấu trúc
 
@@ -56,7 +67,7 @@ Luồng AI: `Prompt → AiFacade.analyze → PromptAnalysis → buildScene → A
 src/
   domain/          thuần tuý: geometry, matrix, color, model, document, history, bounds
   svg-engine/      generator (ArtDocument→SVG), parser (SVG→ArtDocument), scene/subjects
-  ai/              AiFacade, rule-based, onnx (WebGPU/WASM), rules, vocabulary
+  ai/              AiEngine, providers (rule-based, local-models/worker), catalog, device
   application/     AppStore, viewport, events, use-cases (generate, templates)
   infrastructure/  storage (IndexedDB, settings, autosave), export (SVG/PNG/PDF), import, canvas
   plugins/         PluginManager + built-in (shortcuts, quick-export)

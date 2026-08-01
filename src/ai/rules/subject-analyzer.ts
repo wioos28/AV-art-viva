@@ -14,7 +14,7 @@ const FRIENDLY: Record<string, string> = {
   mountain: 'Ngọn núi', tree: 'Cây', flower: 'Hoa', cat: 'Chú mèo',
   bird: 'Chú chim', fish: 'Chú cá', house: 'Ngôi nhà', cloud: 'Đám mây',
   rocket: 'Tên lửa', planet: 'Hành tinh', lightning: 'Tia sét', diamond: 'Kim cương',
-  leaf: 'Chiếc lá', person: 'Người', snowflake: 'Bông tuyết',
+  leaf: 'Chiếc lá', person: 'Người', snowflake: 'Bông tuyết', beach: 'Bờ biển',
 };
 
 /** Nhận diện chủ thể từ prompt. Trả null nếu không có dấu hiệu nào. */

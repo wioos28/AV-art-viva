@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1080" height="720" viewBox="0 0 1080 720" data-artviva="1" data-doc-id="doc_ms9x5syqfpt12nd" data-doc-name="Bờ biển — Nature" data-seed="20260801" data-origin="prompt">
+  <rect x="0" y="0" width="1080" height="720" fill="#ffffff" data-el-id="background" data-el-type="background" />
+  <g data-artviva-layer="1" data-layer-id="lyr_ms9x5syqgv9h953" data-layer-name="Bờ biển">
+    <circle transform="translate(540 360)" opacity="0.14" fill="#74c69d" data-el-id="el_ms9x5sym1gngygj" data-el-type="circle" data-el-name="Circle" r="288" />
+    <rect transform="translate(388.8 344.88)" fill="#74c69d" data-el-id="el_ms9x5syn2gpxqyw" data-el-type="rect" data-el-name="Rect" width="302.4" height="166.32" />
+    <rect transform="translate(388.8 465.84)" fill="#ff8c42" data-el-id="el_ms9x5syn34qfcxy" data-el-type="rect" data-el-name="Rect" width="302.4" height="60.48" />
+    <line transform="translate(437.18 381.17)" stroke="#f4a261" stroke-width="7.56" stroke-linecap="round" data-el-id="el_ms9x5syn4c2202n" data-el-type="line" data-el-name="Line" x2="61.68960000000004" y2="0" />
+    <line transform="translate(550.28 381.17)" stroke="#f4a261" stroke-width="7.56" stroke-linecap="round" data-el-id="el_ms9x5syn5yci2bv" data-el-type="line" data-el-name="Line" x2="61.68959999999993" y2="0" />
+    <line transform="translate(449.28 411.41)" stroke="#f4a261" stroke-width="7.56" stroke-linecap="round" data-el-id="el_ms9x5syn6eij0qz" data-el-type="line" data-el-name="Line" x2="54.43199999999996" y2="0" />
+    <line transform="translate(549.07 411.41)" stroke="#f4a261" stroke-width="7.56" stroke-linecap="round" data-el-id="el_ms9x5syn71c2w01" data-el-type="line" data-el-name="Line" x2="54.432000000000016" y2="0" />
+    <line transform="translate(431.14 435.6)" stroke="#f4a261" stroke-width="7.56" stroke-linecap="round" data-el-id="el_ms9x5syn8e7cuvg" data-el-type="line" data-el-name="Line" x2="65.3184" y2="0" />
+    <line transform="translate(550.89 435.6)" stroke="#f4a261" stroke-width="7.56" stroke-linecap="round" data-el-id="el_ms9x5syn9o8x1bg" data-el-type="line" data-el-name="Line" x2="65.3184" y2="0" />
+    <polygon transform="translate(610.59 468.86)" fill="#f4a261" data-el-id="el_ms9x5sypaczg1lf" data-el-type="polygon" data-el-name="Polygon" points="20.131964336935766,0 26.35308344719931,12.605364131535566 40.26392867387153,14.62672826307113 30.197946505403706,24.438635868464473 32.574202557462854,38.29327173692889 20.131964336935766,31.75200000000001 7.6897261164086785,38.29327173692889 10.065982168467826,24.438635868464473 0,14.62672826307113 13.910845226672222,12.605364131535566" />
+    <polygon transform="translate(422.8 468.86)" fill="#f4a261" data-el-id="el_ms9x5sypb6d7f7k" data-el-type="polygon" data-el-name="Polygon" points="14.379974526382739,0 18.82363103371381,9.003831522525388 28.759949052765478,10.447663045050774 21.56996178957411,17.45616847747459 23.267287541044936,27.35233695494918 14.379974526382739,22.680000000000007 5.4926615117205415,27.35233695494918 7.1899872631913695,17.45616847747459 0,10.447663045050774 9.936318019051669,9.003831522525388" />
+    <circle transform="translate(303.63 662.33)" opacity="0.85" fill="#f4a261" data-el-id="el_ms9x5sypc89eizd" data-el-type="circle" data-el-name="Circle" r="7.215869436971843" />
+    <rect transform="translate(132.93 610.92) rotate(44.01 5.22 5.22)" opacity="0.85" fill="#ff8c42" data-el-id="el_ms9x5sypdetgxor" data-el-type="rect" data-el-name="Rectangle" width="10.439513984136283" height="10.439513984136283" />
+  </g>
+</svg>

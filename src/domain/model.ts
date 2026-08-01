@@ -213,4 +213,12 @@ export interface PromptAnalysis {
   /** Ghi chú của AI (mô tả scene) — dùng làm tên layer. */
   description: string;
   provider: string;
+  /** ID model AI đã xử lý prompt (nếu dùng model cục bộ). */
+  modelId?: string | null;
+  /** Điều kiện ánh sáng gợi ý (day/night/sunset/…). */
+  lighting?: string | null;
+  /** Màu chủ đạo (hex). */
+  mainColor?: string | null;
+  /** Nguồn SVG do model sinh trực tiếp — nếu có, engine dùng nó thay vì buildScene. */
+  svgSource?: string | null;
 }

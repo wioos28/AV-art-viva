@@ -28,7 +28,7 @@ import {
   countElements,
 } from '../domain/document';
 import { History, createHistory, push, undo, redo, canUndo, canRedo } from '../domain/history';
-import { AiFacade, ai as defaultAi } from '../ai';
+import { AiEngine, ai as defaultAi } from '../ai';
 import { generateFromPrompt } from './use-cases/generate';
 import { events } from './events';
 import { ViewportService, Viewport, DEFAULT_VIEWPORT } from './viewport';
@@ -60,6 +60,7 @@ export interface AppState {
   generation: GenerationStatus;
   theme: AppSettings['theme'];
   aiMode: AppSettings['aiMode'];
+  aiModelId: string;
   offline: boolean;
   showGrid: boolean;
   snapToGrid: boolean;
@@ -75,16 +76,20 @@ export class AppStore {
   private listeners = new Set<Listener>();
   private vp: ViewportService;
   private autosave: AutosaveService;
-  private ai: AiFacade;
+  readonly ai: AiEngine;
   private settings: AppSettings;
   private revision = 0;
   private savedRevision = 0;
   private draftId: string | null = null;
   private offlineUnsubs: (() => void)[] = [];
 
-  constructor(aiFacade: AiFacade = defaultAi) {
-    this.ai = aiFacade;
+  constructor(aiEngine: AiEngine = defaultAi) {
+    this.ai = aiEngine;
     this.settings = loadSettings();
+    this.ai.setMode(this.settings.aiMode);
+    this.ai.setModel(this.settings.aiModelId);
+    this.ai.setAllowLargeModels(this.settings.aiAllowLargeModels);
+    this.ai.setModelHost(this.settings.aiModelHost);
     this.vp = new ViewportService(DEFAULT_VIEWPORT);
     this.history = createHistory<ArtDocument>(80);
     this.autosave = new AutosaveService(
@@ -111,6 +116,7 @@ export class AppStore {
       generation: { status: 'idle' },
       theme: this.settings.theme,
       aiMode: this.settings.aiMode,
+      aiModelId: this.settings.aiModelId,
       offline: !navigator.onLine,
       showGrid: this.settings.showGrid,
       snapToGrid: this.settings.snapToGrid,
@@ -603,6 +609,32 @@ export class AppStore {
     saveSettings(this.settings);
     this.ai.setMode(mode);
     this.setState({ aiMode: mode });
+    void this.refreshActiveProvider();
+  }
+
+  /** Chọn model AI (preset id hoặc repoId custom). '' = tự động. */
+  setAiModel(modelId: string): void {
+    this.settings = { ...this.settings, aiModelId: modelId };
+    saveSettings(this.settings);
+    this.ai.setModel(modelId);
+    this.setState({ aiModelId: modelId });
+    void this.refreshActiveProvider();
+  }
+
+  setAiAllowLargeModels(allow: boolean): void {
+    this.settings = { ...this.settings, aiAllowLargeModels: allow };
+    saveSettings(this.settings);
+    this.ai.setAllowLargeModels(allow);
+    this.setState({});
+    void this.refreshActiveProvider();
+  }
+
+  setAiModelHost(host: AppSettings['aiModelHost']): void {
+    this.settings = { ...this.settings, aiModelHost: host };
+    saveSettings(this.settings);
+    this.ai.setModelHost(host);
+    this.setState({});
+    void this.refreshActiveProvider();
   }
 
   setLanguage(lang: AppSettings['language']): void {
@@ -617,18 +649,24 @@ export class AppStore {
     this.setState({ showGrid: show, snapToGrid: snap });
   }
 
-  async setOnnxModel(file: File): Promise<void> {
-    const url = URL.createObjectURL(file);
-    this.settings = { ...this.settings, onnxModelUrl: url };
-    saveSettings(this.settings);
-    this.ai.setOnnxConfig({ modelUrl: url });
-    this.ai.setMode('onnx');
-    this.setState({ aiMode: 'onnx' });
+  async refreshActiveProvider(): Promise<void> {
+    const model = this.ai.getSelectedModel();
+    const loaded = this.ai.isModelLoaded();
+    const name = this.ai.getProviderName();
+    this.setState({ activeProvider: loaded ? `${name}:${model?.id ?? ''}` : name });
   }
 
-  async refreshActiveProvider(): Promise<void> {
-    const provider = await this.ai.getActiveProvider();
-    this.setState({ activeProvider: provider.name });
+  /** Nạp model AI theo cài đặt hiện tại (gọi từ Settings). */
+  async loadAiModel(onProgress?: (stage: string, fraction: number) => void): Promise<boolean> {
+    const ok = await this.ai.loadModel(this.settings.aiModelId || undefined, (stage, f) => onProgress?.(stage, f));
+    await this.refreshActiveProvider();
+    return ok;
+  }
+
+  /** Bỏ model khỏi bộ nhớ. */
+  async unloadAiModel(): Promise<void> {
+    await this.ai.unloadModel();
+    await this.refreshActiveProvider();
   }
 
   /* ------------------------------ offline ----------------------------- */

@@ -212,6 +212,34 @@ const builders: Record<string, SubjectBuilder> = {
     ];
   },
 
+  beach(ctx) {
+    const { cx, cy, s, p } = ctx;
+    const w = s;
+    const horizonY = cy - s * 0.05;
+    const out: ArtElement[] = [];
+    out.push(rect(cx - w / 2, horizonY, w, s * 0.55, p.secondary));
+    out.push(rect(cx - w / 2, horizonY + s * 0.4, w, s * 0.2, p.primary));
+    const wave = (ly: number, lw: number) => {
+      out.push(line(cx - lw, ly, cx - lw * 0.4, ly, p.accent, s * 0.025));
+      out.push(line(cx + lw * 0.1, ly, cx + lw * 0.7, ly, p.accent, s * 0.025));
+    };
+    wave(horizonY + s * 0.12, w * 0.34);
+    wave(horizonY + s * 0.22, w * 0.3);
+    wave(horizonY + s * 0.3, w * 0.36);
+    const star = (bx: number, by: number, r: number) => {
+      const pts: [number, number][] = [];
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+        const rr = i % 2 === 0 ? r : r * 0.5;
+        pts.push([bx + Math.cos(a) * rr, by + Math.sin(a) * rr]);
+      }
+      out.push(poly(pts, p.accent));
+    };
+    star(cx + s * 0.3, horizonY + s * 0.48, s * 0.07);
+    star(cx - s * 0.34, horizonY + s * 0.46, s * 0.05);
+    return out;
+  },
+
   house(ctx) {
     const { cx, cy, s, p } = ctx;
     const w = s * 0.7;
@@ -333,6 +361,7 @@ export function resolveSubject(category: string | null): SubjectBuilder {
     cat: 'cat', cats: 'cat', kitten: 'cat', dog: 'cat', puppy: 'cat', fox: 'cat',
     bird: 'bird', birds: 'bird', owl: 'bird', dove: 'bird',
     fish: 'fish', whale: 'fish', dolphin: 'fish',
+    beach: 'beach', sea: 'beach', ocean: 'beach', coast: 'beach', wave: 'beach', sand: 'beach', island: 'beach',
     house: 'house', home: 'house', castle: 'house', building: 'house',
     cloud: 'cloud', clouds: 'cloud', rainbow: 'cloud',
     rocket: 'rocket', space: 'rocket', astronaut: 'rocket',

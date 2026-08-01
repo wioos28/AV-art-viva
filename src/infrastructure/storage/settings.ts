@@ -1,14 +1,22 @@
 /**
  * settings.ts
  * -----------
- * Lưu cấu hình ứng dụng (theme, AI mode, canvas mặc định…) vào localStorage.
+ * Lưu cấu hình ứng dụng (theme, AI engine/model, canvas mặc định…) vào localStorage.
  * Đây là dữ liệu nhẹ — không cần IndexedDB.
  */
 
+export type AiModeSetting = 'auto' | 'rules' | 'local';
+
 export interface AppSettings {
   theme: 'light' | 'dark' | 'system';
-  aiMode: 'auto' | 'rules' | 'onnx';
-  onnxModelUrl: string;
+  /** 'auto' | 'rules' (luật) | 'local' (model ONNX cục bộ). */
+  aiMode: AiModeSetting;
+  /** Model preset ID hoặc repoId custom ('' = tự chọn theo sức máy). */
+  aiModelId: string;
+  /** Cho phép dùng model lớn hơn khi máy mạnh. */
+  aiAllowLargeModels: boolean;
+  /** Nguồn tải model: modelscope (mặc định) hoặc huggingface. */
+  aiModelHost: 'modelscope' | 'huggingface';
   language: 'vi' | 'en';
   gridSize: number;
   showGrid: boolean;
@@ -18,12 +26,14 @@ export interface AppSettings {
   autosaveIntervalMs: number;
 }
 
-const KEY = 'av-artviva:settings:v1';
+const KEY = 'av-artviva:settings:v2';
 
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: 'system',
   aiMode: 'auto',
-  onnxModelUrl: '/models/style-classifier.onnx',
+  aiModelId: '',
+  aiAllowLargeModels: false,
+  aiModelHost: 'modelscope',
   language: 'vi',
   gridSize: 24,
   showGrid: true,
@@ -37,7 +47,11 @@ export function loadSettings(): AppSettings {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return { ...DEFAULT_SETTINGS };
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw) as Partial<AppSettings>;
+    const merged: AppSettings = { ...DEFAULT_SETTINGS, ...parsed };
+    // Di trú settings v1 ('onnx' → 'local').
+    if ((parsed as { aiMode?: string }).aiMode === 'onnx') merged.aiMode = 'local';
+    return merged;
   } catch {
     return { ...DEFAULT_SETTINGS };
   }

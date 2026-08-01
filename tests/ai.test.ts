@@ -1,18 +1,18 @@
 /**
  * ai.test.ts
  * ----------
- * Integration: AiFacade (rule-based) → PromptAnalysis → generateFromPrompt → ArtDocument.
+ * Integration: AiEngine (rule-based) → PromptAnalysis → generateFromPrompt → ArtDocument.
  */
 
 import { describe, it, expect } from 'vitest';
-import { AiFacade } from '../src/ai';
+import { AiEngine } from '../src/ai';
 import { generateFromPrompt } from '../src/application/use-cases/generate';
 import { generateSvg } from '../src/svg-engine/generator';
 import { parseSvgString } from '../src/svg-engine/parser';
 import { countElements } from '../src/domain/document';
 
 describe('rule-based AI', () => {
-  const ai = new AiFacade('rules');
+  const ai = new AiEngine('rules');
 
   it('analyzes a prompt with subject + colors', async () => {
     const analysis = await ai.analyze('mặt trời neon tím trên nền tối');
@@ -24,7 +24,7 @@ describe('rule-based AI', () => {
 
   it('generates a non-empty document from a prompt', async () => {
     const { document } = await generateFromPrompt(
-      new AiFacade('rules'),
+      new AiEngine('rules'),
       'ngọn núi phong cách thiên nhiên lúc hoàng hôn',
       { width: 640, height: 480, seed: 42 },
     );
@@ -36,7 +36,7 @@ describe('rule-based AI', () => {
 
   it('generated SVG re-parses cleanly', async () => {
     const { document } = await generateFromPrompt(
-      new AiFacade('rules'),
+      new AiEngine('rules'),
       'trái tim trừu tượng với màu hồng và tím',
       { width: 640, height: 480, seed: 7 },
     );
@@ -50,5 +50,30 @@ describe('rule-based AI', () => {
     const analysis = await ai.analyze('purple neon sun on a dark background');
     expect(analysis.subject?.category).toBeTruthy();
     expect(analysis.provider).toBe('rule-based');
+  });
+
+  it('caches repeated prompts (LRU)', async () => {
+    const engine = new AiEngine('rules');
+    const a = await engine.analyze('mặt trời vàng', { seed: 1 });
+    const b = await engine.analyze('mặt trời vàng', { seed: 1 });
+    expect(a).toBe(b); // cached object
+    const c = await engine.analyze('mặt trời vàng', { seed: 2 });
+    expect(c).not.toBe(a);
+  });
+});
+
+describe('rule-based image analysis', () => {
+  it('detects dominant colors from pixels', async () => {
+    const engine = new AiEngine('rules');
+    // Tạo ảnh 2x2: đỏ, đỏ, xanh, trắng.
+    const data = new Uint8ClampedArray([
+      255, 0, 0, 255, 255, 0, 0, 255,
+      0, 0, 255, 255, 255, 255, 255, 255,
+    ]);
+    const img = { data, width: 2, height: 2 } as ImageData;
+    const analysis = await engine.analyzeImage(img);
+    expect(analysis.colors.length).toBeGreaterThan(0);
+    expect(analysis.mainColor).toMatch(/^#/);
+    expect(analysis.lighting).toBe('day');
   });
 });
